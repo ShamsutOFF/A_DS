@@ -2,21 +2,7 @@ import kotlin.random.Random
 
 fun main() {
     val laptops = createLaptops(10_000)
-    for (i in 0 until laptops.size){
-        println(laptops[i])
-    }
-    println("***************************")
-
-    val sortedList = laptops.sortedWith(compareBy({ it.price }, { it.memory }, {it.manufacturer}))
-    for (i in 0 until laptops.size){
-        println(sortedList[i])
-    }
-}
-
-fun testArrayForSort(arr: ArrayList<Int>) {
-    for (i in 0 until arr.size - 1) {
-        if (arr[i] > arr[i + 1]) println("ОШИБКА!!! Массив не отсортирован!!!")
-    }
+    val sortedLaptopList = laptops.sortedWith(compareBy({ it.price }, { it.memory }, {it.manufacturer}))
 }
 
 fun createLaptops(quantity: Int): ArrayList<Laptop> {
