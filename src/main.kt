@@ -1,94 +1,129 @@
-import kotlin.random.Random
-
 fun main() {
-    val laptops = createLaptops(10_000)
-    for (i in 0 until laptops.size){
-        println(laptops[i])
-    }
-    println("***************************")
+    val arr8 = myArr(100_000, 9858)
+    val arrays = listOf(arr8)
+    testArrays(arrays)
 
-    val sortedList = laptops.sortedWith(compareBy({ it.price }, { it.memory }, {it.manufacturer}))
-    for (i in 0 until laptops.size){
-        println(sortedList[i])
+
+    val queue = Queue(3)
+    queue.insert(10)
+    queue.insert(20)
+    println(queue.isFull())
+    queue.remove()
+    queue.insert(30)
+    queue.insert(40)
+    println(queue.isFull())
+    while (!queue.isEmpty()) {
+        println(queue.remove())
+    }
+    println(queue.isEmpty())
+}
+
+fun myArr(size: Int, skip: Int): List<Int> {
+    val arr = arrayListOf<Int>()
+    for (i in 1..size) {
+        if (i != skip) arr.add(i)
+    }
+    return arr.toList()
+}
+
+fun testArrays(arrays: List<List<Int>>) {
+    for (i in arrays.indices) {
+        val arr = arrays[i]
+        if (arr.isNullOrEmpty()) println("Массив ${i + 1} - пустой. Значит нет цифры ${arr.lastIndex + 2}")
+        else if (arr.lastIndex == arr[arr.lastIndex] - 1) println("Массив ${i + 1} - нет цифры ${arr.lastIndex + 2}")
+        else if (arr.lastIndex == arr[arr.lastIndex] - 2 && arr.first() != 1) println("Массив ${i + 1} - нет цифры 1 , но это нарушение уловий задания")
+        else println("Массив ${i + 1} - нет цифры ${myBinarySearch(arr)}")
     }
 }
 
-fun testArrayForSort(arr: ArrayList<Int>) {
-    for (i in 0 until arr.size - 1) {
-        if (arr[i] > arr[i + 1]) println("ОШИБКА!!! Массив не отсортирован!!!")
-    }
-}
-
-fun createLaptops(quantity: Int): ArrayList<Laptop> {
-    val manufacturers = listOf("Lenovo", "Acer", "Apple", "Dell", "HP", "MSI", "Asus")
-
-    val prices = arrayListOf<Int>()
-    for (i in 500..2000 step 50) {
-        prices.add(i)
-    }
-
-    val memoryList = arrayListOf<Int>()
-    for (i in 4..24 step 4) {
-        memoryList.add(i)
-    }
-
-    val laptops = arrayListOf<Laptop>()
-    for (i in 1..quantity) {
-        laptops.add(
-            Laptop(
-                prices[Random.nextInt(prices.size)],
-                memoryList[Random.nextInt(memoryList.size)],
-                manufacturers[Random.nextInt(manufacturers.size)]
-            )
-        )
-    }
-    return laptops
-}
-
-fun selectionSortV3(arr: ArrayList<Int>): ArrayList<Int> {
-    fun swap(a: Int, b: Int) {
-        val tmp = arr[a]
-        arr[a] = arr[b]
-        arr[b] = tmp
-    }
-
+fun myBinarySearch(arr: List<Int>): Int {
     var minIndex = 0
-    var maxIndex = 0
-    var lastIndex = arr.size - 1
+    var maxIndex = arr.lastIndex
+    var middleIndex: Int
+    var searchingNumber = 0
+    var i = 0
+    var find = false
 
-    for (firstIndex in 0 until arr.size/2+1) {
-        var min = Int.MAX_VALUE
-        var max = 0
-        for (j in firstIndex..lastIndex) {
-            if (min > arr[j]) {
-                min = arr[j]
-                minIndex = j
-            }
-            if (max < arr[j]) {
-                max = arr[j]
-                maxIndex = j
-            }
+    while (!find) {
+        i++
+        middleIndex = (maxIndex + minIndex) / 2
+        if (minIndex == maxIndex - 1 || minIndex == maxIndex) {
+            searchingNumber = minIndex + 2
+            println("Нашли за $i итераций ")
+            find = true
+        } else if (middleIndex == arr[middleIndex] - 2) {
+            maxIndex = middleIndex
+        } else if (middleIndex == arr[middleIndex] - 1) {
+            minIndex = middleIndex
         }
-        println("Итерация: ${firstIndex + 1} Массив: $arr")
-        if (maxIndex == firstIndex && minIndex != lastIndex) {
-            swap(maxIndex, lastIndex)
-            swap(minIndex, firstIndex)
-        } else if (minIndex == lastIndex && maxIndex != firstIndex){
-            swap(minIndex, firstIndex)
-            swap(maxIndex, lastIndex)
-        } else if (minIndex == lastIndex && maxIndex == firstIndex){
-            swap(firstIndex, lastIndex)
-        } else {
-            swap(maxIndex, lastIndex)
-            swap(minIndex, firstIndex)
-        }
-        lastIndex--
     }
-    return arr
+    return searchingNumber
 }
 
-data class Laptop(
-    val price: Int,
-    val memory: Int,
-    val manufacturer: String
-)
+class Stack(val size: Int) {
+    private val stackArray = LongArray(size)
+    private var top = -1
+
+    fun push(number: Long) {
+        stackArray[++top] = number
+    }
+
+    fun pop(): Long {
+        return stackArray[top--]
+    }
+
+    fun peek(): Long {
+        return stackArray[top]
+    }
+
+    fun isEmpty(): Boolean {
+        return top == -1
+    }
+
+    fun isFull(): Boolean {
+        return top == size - 1
+    }
+}
+
+class Queue(private val size: Int) {
+    private val queueArray = LongArray(size)
+    private var front = 0
+    private var rear = -1
+    private var items = 0
+
+    fun insert(number: Long) {
+        if (rear == size - 1) {
+            rear = -1
+        }
+        queueArray[++rear] = number
+        items++
+    }
+
+    fun remove(): Long {
+        val temp = queueArray[front++]
+        if (front == size) {
+            front = 0
+        }
+        items--
+        return temp
+    }
+
+    fun peekFront(): Long {
+        return queueArray[front]
+    }
+
+    fun isEmpty(): Boolean {
+        return items == 0
+    }
+
+    fun isFull(): Boolean {
+        return items == size
+    }
+
+    fun size(): Int {
+        return size
+    }
+}
+
+
+
