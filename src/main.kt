@@ -1,63 +1,21 @@
 fun main() {
-    val arr1 = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16) // => 11
-    val arr2 = listOf(1, 2, 4, 5, 6) // => 3
-    val arr3 = emptyList<Int>() // => 1
-    val arr4 = listOf(2, 3, 4, 5, 6) // => 1
-    val arr5 = listOf(1, 2, 3, 4, 5, 6) // => 7
-    val arr6 = listOf(1, 2, 3, 4, 6, 7) // => 5
-    val arr7 = listOf(
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45,
-        46,
-        47,
-        48
-    ) // => 11
     val arr8 = myArr(100_000, 9858)
-
     val arrays = listOf(arr8)
     testArrays(arrays)
+
+
+    val queue = Queue(3)
+    queue.insert(10)
+    queue.insert(20)
+    println(queue.isFull())
+    queue.remove()
+    queue.insert(30)
+    queue.insert(40)
+    println(queue.isFull())
+    while (!queue.isEmpty()) {
+        println(queue.remove())
+    }
+    println(queue.isEmpty())
 }
 
 fun myArr(size: Int, skip: Int): List<Int> {
@@ -81,7 +39,7 @@ fun testArrays(arrays: List<List<Int>>) {
 fun myBinarySearch(arr: List<Int>): Int {
     var minIndex = 0
     var maxIndex = arr.lastIndex
-    var middleIndex = 0
+    var middleIndex: Int
     var searchingNumber = 0
     var i = 0
     var find = false
@@ -100,6 +58,71 @@ fun myBinarySearch(arr: List<Int>): Int {
         }
     }
     return searchingNumber
+}
+
+class Stack(val size: Int) {
+    private val stackArray = LongArray(size)
+    private var top = -1
+
+    fun push(number: Long) {
+        stackArray[++top] = number
+    }
+
+    fun pop(): Long {
+        return stackArray[top--]
+    }
+
+    fun peek(): Long {
+        return stackArray[top]
+    }
+
+    fun isEmpty(): Boolean {
+        return top == -1
+    }
+
+    fun isFull(): Boolean {
+        return top == size - 1
+    }
+}
+
+class Queue(private val size: Int) {
+    private val queueArray = LongArray(size)
+    private var front = 0
+    private var rear = -1
+    private var items = 0
+
+    fun insert(number: Long) {
+        if (rear == size - 1) {
+            rear = -1
+        }
+        queueArray[++rear] = number
+        items++
+    }
+
+    fun remove(): Long {
+        val temp = queueArray[front++]
+        if (front == size) {
+            front = 0
+        }
+        items--
+        return temp
+    }
+
+    fun peekFront(): Long {
+        return queueArray[front]
+    }
+
+    fun isEmpty(): Boolean {
+        return items == 0
+    }
+
+    fun isFull(): Boolean {
+        return items == size
+    }
+
+    fun size(): Int {
+        return size
+    }
 }
 
 
